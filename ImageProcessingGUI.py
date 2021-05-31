@@ -24,12 +24,14 @@ import cv2
 #     canvas=FigureCanvasTkAgg(fig, master=plot_frame)
 #     canvas.get_tk_widget().pack()
 
+
+#Reading the image from our directory
 cwd = os.getcwd()
-imgname='bojnice.jpg'
+imgname='bojnice.jpg' #change image
 
 path = os.path.join(cwd, imgname)
 img = cv2.imread(path, 0)
-imgResized = cv2.resize(img, (648,480))
+
 
 
 def loadButton():
@@ -40,27 +42,27 @@ def loadButton():
     myLabel = Label(e, text=root.filename).place(x=100,y=100)
 
 def originalImage():
-    cv2.imshow('Original Photo', imgResized)
+    cv2.imshow('Original Photo', img)
 
 def Filter2D():
     kernel=np.ones((3,3), np.float32)/9
-    filter_2d = cv2.filter2D(imgResized, -1, kernel)
+    filter_2d = cv2.filter2D(img, -1, kernel)
     cv2.imshow('2D filter', filter_2d)
     
 def ImageBlur():
-    image_blur = cv2.blur(imgResized,(3,3))
+    image_blur = cv2.blur(img,(3,3))
     cv2.imshow('Image Blur', image_blur)
     
 def ImageGaussianBlur():
-    gaussian_blur = cv2.GaussianBlur(imgResized,(3,3), 0)
+    gaussian_blur = cv2.GaussianBlur(img,(3,3), 0)
     cv2.imshow('Image Gaussian Blur', gaussian_blur)
     
 def ImageEdgeDetection():
-    edgeDetection=cv2.Canny(imgResized,100,200)
+    edgeDetection=cv2.Canny(img,100,200)
     cv2.imshow('Edge Detection', edgeDetection)
     
 def DiscreteWaveletTransform2D():
-    coefficients = pywt.dwt2(imgResized, 'haar', mode='periodization')
+    coefficients = pywt.dwt2(img, 'haar', mode='periodization')
     cA1, (cH1,cV1,cD1) = coefficients #Approximation Coeff, Horizontal Coeffs, Vertical Coeffs, Diagonal Coeffs - output arguments
     
     plt.figure(figsize=(15,15))
@@ -84,6 +86,8 @@ def DiscreteWaveletTransform2D():
     plt.subplot(2,2,4)
     plt.imshow(cD1, 'gray')
     plt.title('Diagonal detail Coefficients')
+    
+    plt.show()
     
 
 
