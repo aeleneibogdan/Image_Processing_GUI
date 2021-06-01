@@ -27,7 +27,7 @@ import cv2
 
 #Reading the image from our directory
 cwd = os.getcwd()
-imgname='bojnice.jpg' #change image
+imgname='dwtstructure.jpg' #change image
 
 path = os.path.join(cwd, imgname)
 img = cv2.imread(path, 0)
@@ -61,8 +61,36 @@ def ImageEdgeDetection():
     edgeDetection=cv2.Canny(img,100,200)
     cv2.imshow('Edge Detection', edgeDetection)
     
-def DiscreteWaveletTransform2D():
+def DiscreteWaveletTransformHaar():
     coefficients = pywt.dwt2(img, 'haar', mode='periodization')
+    cA1, (cH1,cV1,cD1) = coefficients #Approximation Coeff, Horizontal Coeffs, Vertical Coeffs, Diagonal Coeffs - output arguments
+    
+    plt.figure(figsize=(15,15))
+    
+    #Plotting Approximation Coefficients
+    plt.subplot(2,2,1)
+    plt.imshow(cA1, 'gray')
+    plt.title('Approximation Coefficients')
+    
+    #Plotting Horizontal detail coefficients
+    plt.subplot(2,2,2)
+    plt.imshow(cH1, 'gray')
+    plt.title('Horizontal detail Coefficients')
+    
+    #Plotting Vertical detail coefficients
+    plt.subplot(2,2,3)
+    plt.imshow(cV1, 'gray')
+    plt.title('Vertical detail Coefficients')
+    
+    #Plotting Diagonal detail coefficients
+    plt.subplot(2,2,4)
+    plt.imshow(cD1, 'gray')
+    plt.title('Diagonal detail Coefficients')
+    
+    plt.show()
+    
+def DiscreteWaveletTransformDaubechies():
+    coefficients = pywt.dwt2(img, 'db3', mode='periodization')
     cA1, (cH1,cV1,cD1) = coefficients #Approximation Coeff, Horizontal Coeffs, Vertical Coeffs, Diagonal Coeffs - output arguments
     
     plt.figure(figsize=(15,15))
@@ -96,26 +124,29 @@ root.title('Image processing GUI')
 root.geometry("300x300")
 root.configure(bg="#DAF7A6")
 
-loadButton = Button(root, text="Load Image", command=loadButton)
+loadButton = Button(root, text="Load Image", command=loadButton) #Button to load image
 loadButton.place(x=7,y=30)
 
-originalButton = Button(root, text="Original", command=originalImage)
+originalButton = Button(root, text="Original", command=originalImage) #Button to display original picture
 originalButton.place(x=70,y=70)
 
-filter2DButton = Button(root, text="Filter2D", command=Filter2D)
+filter2DButton = Button(root, text="Filter2D", command=Filter2D) #Button to display the 2D filtered picture
 filter2DButton.place(x=70,y=100)
 
-blurButton = Button(root, text="Blur", command=ImageBlur)
+blurButton = Button(root, text="Blur", command=ImageBlur) #Button to blur the image
 blurButton.place(x=70,y=130)
 
-gaussBlurButton = Button(root, text="Gaussian Blur", command=ImageGaussianBlur)
+gaussBlurButton = Button(root, text="Gaussian Blur", command=ImageGaussianBlur) #Button to display the picture with a Gaussian Blur
 gaussBlurButton.place(x=140,y=70)
 
-edgeButton = Button(root, text="Edge Detection", command=ImageEdgeDetection)
+edgeButton = Button(root, text="Edge Detection", command=ImageEdgeDetection) #Button for edge detection of pictures
 edgeButton.place(x=140,y=100)
 
-dwtButton = Button(root, text="DWT", command=DiscreteWaveletTransform2D)
-dwtButton.place(x=140,y=130)
+dwt1Button = Button(root, text="Haar", command=DiscreteWaveletTransformHaar) #Button for HAAR wavelet
+dwt1Button.place(x=140,y=130)
+
+dwt2Button = Button(root, text="Daubechies", command=DiscreteWaveletTransformDaubechies) #Button for Daubechies wavelet
+dwt2Button.place(x=140,y=160)
 
 quitButton = Button(root, text="Exit", command=root.quit)
 quitButton.place(x=130,y=270)
